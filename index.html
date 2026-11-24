@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Ludo Star Clone</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- الشريط العلوي (العملات والجواهر) -->
+    <div class="top-bar">
+        <div class="currency-box">
+            <span class="icon coin-icon"></span>
+            <span id="coins-val">3.05M</span>
+            <span class="plus-btn">+</span>
+        </div>
+        <div class="currency-box">
+            <span class="icon gem-icon"></span>
+            <span id="gems-val">11</span>
+            <span class="plus-btn">+</span>
+        </div>
+        <div class="profile-box">
+            <div class="avatar"></div>
+        </div>
+    </div>
+
+    <!-- منطقة اللعب -->
+    <div class="game-area">
+        <!-- لوحة اللودو -->
+        <div class="ludo-board" id="board">
+            <!-- سيتم رسم الخلايا هنا برمجياً -->
+        </div>
+
+        <!-- النرد ورسالة الدور -->
+        <div class="dice-section">
+            <div class="turn-indicator" id="turn-text">دورك الآن!</div>
+            <div class="dice" id="dice" onclick="rollDice()">
+                <div class="dice-face" id="dice-face">⚀</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الشريط السفلي (VIP واللعب) -->
+    <div class="bottom-bar">
+        <button class="btn btn-vip">غرف VIP</button>
+        <button class="btn btn-play" onclick="startGame()">ابدأ اللعب</button>
+        <button class="btn btn-store">المتجر</button>
+    </div>
+
+    <!-- شاشة الفوز -->
+    <div class="win-screen hidden" id="win-screen">
+        <h1>فوز عظيم!</h1>
+        <div class="trophy-icon">🏆</div>
+        <p id="winner-text">اللاعب الأحمر فاز!</p>
+        <button class="btn btn-restart" onclick="location.reload()">لعبة جديدة</button>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
