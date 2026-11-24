@@ -1,11 +1,10 @@
-name: Build Android APK
+name: Build Ludo APK
 
 on: [push, workflow_dispatch]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
 
@@ -15,67 +14,22 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Create Android Project
+    - name: Copy Web Assets to Android
       run: |
-        mkdir -p android/app/src/main/java/com/engtrx/ludostar
-        mkdir -p android/app/src/main/res/values
-        mkdir -p android/app/src/main/assets
-
-    - name: Copy Web Files
-      run: |
-        cp index.html android/app/src/main/assets/
-        cp style.css android/app/src/main/assets/
-        cp game.js android/app/src/main/assets/
-
-    - name: Create AndroidManifest.xml
-      run: |
-        cat << 'EOF' > android/app/src/main/AndroidManifest.xml
-        <?xml version="1.0" encoding="utf-8"?>
-        <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.engtrx.ludostar">
-            <application android:allowBackup="true" android:label="Ludo Star Clone" android:theme="@style/Theme.AppCompat.NoActionBar">
-                <activity android:name=".MainActivity" android:exported="true">
-                    <intent-filter>
-                        <action android:name="android.intent.action.MAIN" />
-                        <category android:name="android.intent.category.LAUNCHER" />
-                    </intent-filter>
-                </activity>
-            </application>
-        </manifest>
-        EOF
-
-    - name: Create MainActivity.java (WebView)
-      run: |
-        cat << 'EOF' > android/app/src/main/java/com/engtrx/ludostar/MainActivity.java
-        package com.engtrx.ludostar;
-        import android.app.Activity;
-        import android.os.Bundle;
-        import android.webkit.WebView;
-        import android.webkit.WebSettings;
-        public class MainActivity extends Activity {
-            @Override
-            protected void onCreate(Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
-                WebView webView = new WebView(this);
-                WebSettings webSettings = webView.getSettings();
-                webSettings.setJavaScriptEnabled(true);
-                webView.loadUrl("file:///android_asset/index.html");
-                setContentView(webView);
-            }
-        }
-        EOF
+        mkdir -p app/src/main/assets
+        cp index.html app/src/main/assets/
+        cp style.css app/src/main/assets/
+        cp game.js app/src/main/assets/
+        if [ -d "assets" ]; then cp -r assets app/src/main/assets/; fi
 
     - name: Build APK
       run: |
-        cd android
-        # إعداد Gradle السريع لبناء APK
-        echo "sdk.dir=/usr/local/lib/android/sdk" > local.properties
-        
-        # هذا الجزء يبني الـ APK
         gradle wrapper --gradle-version 8.0
+        chmod +x gradlew
         ./gradlew assembleDebug
-        
+
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: Ludo-Star-APK
-        path: android/app/build/outputs/apk/debug/app-debug.apk
+        path: app/build/outputs/apk/debug/app-debug.apk
