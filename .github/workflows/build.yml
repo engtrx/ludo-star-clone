@@ -2,6 +2,9 @@ name: Build Ludo APK
 
 on: [push, workflow_dispatch]
 
+env:
+  GRADLE_OPTS: "-Dorg.gradle.internal.repository.max.tentatives=6 -Dorg.gradle.internal.repository.initial.backoff=5000"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,9 +27,9 @@ jobs:
 
     - name: Build APK
       run: |
-        gradle wrapper --gradle-version 8.0
+        gradle wrapper --gradle-version 8.2
         chmod +x gradlew
-        ./gradlew assembleDebug
+        ./gradlew assembleDebug --refresh-dependencies
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
